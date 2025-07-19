@@ -18,9 +18,8 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // 允许所有OPTIONS请求
-                        .requestMatchers("/api/login", "/error").permitAll()
-                        .requestMatchers("/api/login", "/api/change-password", "/error").permitAll()
-                        .requestMatchers("/api/login", "/api/register", "/error").permitAll()
+                        .requestMatchers("/api/login", "/api/register", "/api/change-password", "/error").permitAll()
+                        .requestMatchers("/api/drugs/**", "/api/news/**", "/api/orders/**", "/api/test/**").permitAll() // 允许药品、新闻、订单、测试相关API
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form.disable())

@@ -38,8 +38,8 @@ const handleLogin = async () => {
     const res = await axios.post('http://localhost:8080/api/login', loginForm.value)
     alert('登录成功')
     errorMsg.value = ''
-    // 登录成功后可跳转主页面
-    // router.push('/user')
+    // 登录成功后跳转到用户主页
+    router.push('/user')
   } catch (err) {
     errorMsg.value = '用户名或密码错误'
   }
