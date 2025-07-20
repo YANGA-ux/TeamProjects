@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/user")
+@CrossOrigin(origins = "*")
 public class UserController {
 
     private final UserService userService;
@@ -21,47 +22,113 @@ public class UserController {
         this.userService = userService;
     }
 
+    // 根据用户名获取用户信息
+    @GetMapping("/info")
+    public ResponseResult<User> getUserInfo(@RequestParam String username) {
+        try {
+            User user = userService.getUserByUsername(username);
+            if (user != null) {
+                // 不返回密码信息
+                user.setPassword(null);
+                return ResponseResult.success(user);
+            } else {
+                return ResponseResult.error(404, "用户不存在");
+            }
+        } catch (Exception e) {
+            return ResponseResult.error(500, "获取用户信息失败: " + e.getMessage());
+        }
+    }
+
     // 查询所有用户
-    @GetMapping
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
+    @GetMapping("/list")
+    public ResponseResult<List<User>> getAllUsers() {
+        try {
+            List<User> users = userService.getAllUsers();
+            // 不返回密码信息
+            users.forEach(user -> user.setPassword(null));
+            return ResponseResult.success(users);
+        } catch (Exception e) {
+            return ResponseResult.error(500, "获取用户列表失败: " + e.getMessage());
+        }
     }
 
     // 根据ID查询用户
     @GetMapping("/{id}")
-    public User getUserById(@PathVariable Long id) {
-        return userService.getUserById(id);
+    public ResponseResult<User> getUserById(@PathVariable Long id) {
+        try {
+            User user = userService.getUserById(id);
+            if (user != null) {
+                user.setPassword(null);
+                return ResponseResult.success(user);
+            } else {
+                return ResponseResult.error(404, "用户不存在");
+            }
+        } catch (Exception e) {
+            return ResponseResult.error(500, "获取用户信息失败: " + e.getMessage());
+        }
     }
 
     // 创建用户
     @PostMapping
-    public User createUser(@RequestBody User user) {
-        return userService.createUser(user);
+    public ResponseResult<User> createUser(@RequestBody User user) {
+        try {
+            User createdUser = userService.createUser(user);
+            createdUser.setPassword(null);
+            return ResponseResult.success(createdUser);
+        } catch (Exception e) {
+            return ResponseResult.error(500, "创建用户失败: " + e.getMessage());
+        }
     }
 
     // 更新用户
     @PutMapping("/{id}")
-    public User updateUser(@PathVariable Long id, @RequestBody User user) {
-        return userService.updateUser(id, user);
+    public ResponseResult<User> updateUser(@PathVariable Long id, @RequestBody User user) {
+        try {
+            User updatedUser = userService.updateUser(id, user);
+            updatedUser.setPassword(null);
+            return ResponseResult.success(updatedUser);
+        } catch (Exception e) {
+            return ResponseResult.error(500, "更新用户失败: " + e.getMessage());
+        }
     }
 
     // 删除用户
     @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
+    public ResponseResult<String> deleteUser(@PathVariable Long id) {
+        try {
+            userService.deleteUser(id);
+            return ResponseResult.success("用户删除成功");
+        } catch (Exception e) {
+            return ResponseResult.error(500, "删除用户失败: " + e.getMessage());
+        }
     }
 
     // 修改密码
-    @PostMapping("/{id}/change-password")
-    public void changePassword(@PathVariable String username,
+    @PostMapping("/change-password")
+    public ResponseResult<String> changePassword(@RequestParam String username,
                                @RequestParam String oldPassword,
                                @RequestParam String newPassword) {
-        userService.changePassword(username, oldPassword, newPassword);
+        try {
+            boolean success = userService.changePassword(username, oldPassword, newPassword);
+            if (success) {
+                return ResponseResult.success("密码修改成功");
+            } else {
+                return ResponseResult.error(400, "原密码错误或用户不存在");
+            }
+        } catch (Exception e) {
+            return ResponseResult.error(500, "修改密码失败: " + e.getMessage());
+        }
     }
 
     // 根据角色查询用户
     @GetMapping("/role/{role}")
-    public List<User> getUsersByRole(@PathVariable String role) {
-        return userService.getUsersByRole(role);
+    public ResponseResult<List<User>> getUsersByRole(@PathVariable String role) {
+        try {
+            List<User> users = userService.getUsersByRole(role);
+            users.forEach(user -> user.setPassword(null));
+            return ResponseResult.success(users);
+        } catch (Exception e) {
+            return ResponseResult.error(500, "获取用户列表失败: " + e.getMessage());
+        }
     }
 }

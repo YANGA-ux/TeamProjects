@@ -31,6 +31,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getUserByUsername(String username) {
+        // 通过用户名查询用户
+        QueryWrapper<User> wrapper = new QueryWrapper<>();
+        wrapper.eq("username", username);
+        return userMapper.selectOne(wrapper);
+    }
+
+    @Override
     public User createUser(User user) {
         // 创建用户
         userMapper.insert(user);

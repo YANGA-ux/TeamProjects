@@ -38,6 +38,15 @@ const handleLogin = async () => {
     const res = await axios.post('http://localhost:8080/api/login', loginForm.value)
     alert('登录成功')
     errorMsg.value = ''
+    
+    // 保存用户信息到localStorage
+    const userInfo = {
+      username: loginForm.value.username,
+      real_name: loginForm.value.username, // 暂时使用用户名作为真实姓名
+      role: 'ADMIN' // 暂时设置为管理员角色
+    }
+    localStorage.setItem('currentUser', JSON.stringify(userInfo))
+    
     // 登录成功后跳转到用户主页
     router.push('/user')
   } catch (err) {

@@ -34,6 +34,14 @@ public class TestController {
         return ResponseResult.success(health);
     }
 
+    @GetMapping("/simple")
+    public Map<String, Object> simpleTest() {
+        Map<String, Object> result = new HashMap<>();
+        result.put("message", "后端服务正常");
+        result.put("timestamp", System.currentTimeMillis());
+        return result;
+    }
+
     @GetMapping("/database")
     public ResponseResult<Map<String, Object>> databaseTest() {
         Map<String, Object> result = new HashMap<>();
@@ -60,13 +68,5 @@ public class TestController {
         }
         
         return ResponseResult.success(result);
-    }
-
-    @GetMapping("/simple")
-    public Map<String, Object> simpleTest() {
-        Map<String, Object> result = new HashMap<>();
-        result.put("message", "后端服务正常");
-        result.put("timestamp", System.currentTimeMillis());
-        return result;
     }
 } 

@@ -4,7 +4,7 @@
 <mapper namespace="com.hwadee.backend.mapper.UserMapper">
 
     <select id="selectByRole" resultType="com.hwadee.backend.entity.User">
-        SELECT * FROM sys_user WHERE user_role = #{role}
+        SELECT * FROM sys_user WHERE role = #{role}
     </select>
 
 </mapper>
