@@ -53,4 +53,11 @@ public class DrugServiceImpl implements DrugService {
         wrapper.eq("status", "active").last("LIMIT 10");
         return drugMapper.selectList(wrapper);
     }
+
+    @Override
+    public List<Drug> list() {
+        return null;
+    }
+
+
 } 

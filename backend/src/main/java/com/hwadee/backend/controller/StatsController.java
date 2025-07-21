@@ -5,11 +5,14 @@ import com.hwadee.backend.entity.Batch;
 import com.hwadee.backend.entity.Compound;
 import com.hwadee.backend.entity.Experiment;
 import com.hwadee.backend.entity.Material;
+import com.hwadee.backend.entity.ProdBatch;
+import com.hwadee.backend.entity.QaQualityStandard;
 import com.hwadee.backend.entity.Supplier;
-import com.hwadee.backend.mapper.BatchMapper;
 import com.hwadee.backend.mapper.CompoundMapper;
 import com.hwadee.backend.mapper.ExperimentMapper;
 import com.hwadee.backend.mapper.MaterialMapper;
+import com.hwadee.backend.mapper.ProdBatchMapper;
+import com.hwadee.backend.mapper.QaQualityStandardMapper;
 import com.hwadee.backend.mapper.SupplierMapper;
 import com.hwadee.backend.service.UserService;
 import com.hwadee.backend.util.ResponseResult;
@@ -34,13 +37,16 @@ public class StatsController {
     private ExperimentMapper experimentMapper;
     
     @Autowired
-    private BatchMapper batchMapper;
-    
-    @Autowired
     private MaterialMapper materialMapper;
     
     @Autowired
     private SupplierMapper supplierMapper;
+    
+    @Autowired
+    private ProdBatchMapper prodBatchMapper;
+    
+    @Autowired
+    private QaQualityStandardMapper qaQualityStandardMapper;
 
     @GetMapping("/dashboard")
     public ResponseResult<Map<String, Object>> getDashboardStats() {
@@ -67,13 +73,15 @@ public class StatsController {
             int experimentCount = Math.toIntExact(experimentMapper.selectCount(experimentWrapper));
             rdStats.put("experiments", experimentCount);
             
-            // 生产模块统计（批次）
+            // 生产模块统计（批次、质量标准）
             Map<String, Object> prodStats = new HashMap<>();
-            QueryWrapper<Batch> batchWrapper = new QueryWrapper<>();
-            batchWrapper.eq("status", 1);
-            int batchCount = Math.toIntExact(batchMapper.selectCount(batchWrapper));
-            prodStats.put("batches", batchCount);
-            prodStats.put("standards", 23); // 暂时使用模拟数据
+            QueryWrapper<ProdBatch> prodBatchWrapper = new QueryWrapper<>();
+            int prodBatchCount = Math.toIntExact(prodBatchMapper.selectCount(prodBatchWrapper));
+            prodStats.put("batches", prodBatchCount);
+            
+            QueryWrapper<QaQualityStandard> standardWrapper = new QueryWrapper<>();
+            int standardCount = Math.toIntExact(qaQualityStandardMapper.selectCount(standardWrapper));
+            prodStats.put("standards", standardCount);
             
             // 供应链模块统计（物料、供应商）
             Map<String, Object> scmStats = new HashMap<>();
@@ -95,7 +103,7 @@ public class StatsController {
             // 总体统计
             stats.put("totalUsers", totalUsers);
             stats.put("totalCompounds", compoundCount);
-            stats.put("totalBatches", batchCount);
+            stats.put("totalBatches", prodBatchCount);
             stats.put("totalSuppliers", supplierCount);
             
             // 模块统计

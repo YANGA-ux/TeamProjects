@@ -52,14 +52,12 @@
               </div>
             </el-card>
           </el-col>
-
           <!-- 生产模块 -->
           <el-col :span="8" v-if="hasPermission('prod')">
             <el-card class="module-card" @click="goToModule('prod')">
               <div class="module-icon prod">
                 <el-icon :size="40"><Box /></el-icon>
               </div>
-              <h4>生产管理</h4>
               <p>批次管理、质量控制、生产监控</p>
               <div class="module-stats">
                 <span>批次：{{ stats.batches || 0 }}</span>
@@ -286,11 +284,11 @@ const hasPermission = (module) => {
   }
 
   const permissions = {
-    'rd': ['researcher', 'admin', '普通用户', 'user'], // 允许普通用户访问研发管理
-    'prod': ['producer', 'admin'],
+    'rd': ['researcher', 'admin', '普通用户', 'user'],
+    'prod': ['producer', 'admin', 'user'], // 加上 'user'
     'scm': ['supplier', 'admin'],
     'sys': ['admin']
-  }
+}
 
   const hasAccess = permissions[module]?.includes(normalizedRole) || false
   console.log(`权限检查结果: ${hasAccess}`) // 添加调试日志
@@ -304,7 +302,7 @@ const goToModule = (module) => {
   
   const moduleRoutes = {
     'rd': '/rd/compounds', // 研发管理跳转到化合物管理
-    // 'prod': '/prod/batches', // 生产管理跳转到批次管理
+    'prod': '/prod', // 生产管理跳转到生产管理主页
     // 'scm': '/scm/materials', // 供应链管理跳转到物料管理
     // 'sys': '/sys/users' // 系统管理跳转到用户管理
   }
@@ -327,7 +325,7 @@ const quickAction = (action) => {
   const actionRoutes = {
     addCompound: '/rd/compounds', // 新增化合物跳转到化合物管理页面
     newExperiment: '/rd/compounds', // 创建实验暂时跳转到化合物管理
-    newBatch: '/rd/compounds', // 新建批次暂时跳转到化合物管理
+    newBatch: '/prod/batches', // 新建批次跳转到批次管理
     addSupplier: '/rd/compounds' // 添加供应商暂时跳转到化合物管理
   }
   

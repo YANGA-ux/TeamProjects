@@ -21,6 +21,10 @@ public class DrugController {
         List<Drug> drugs = drugService.getAllDrugs();
         return ResponseResult.success(drugs);
     }
+    @GetMapping("/list")
+    public ResponseResult<List<Drug>> getDrugList() {
+        return ResponseResult.success(drugService.list());
+    }
 
     @GetMapping("/{id}")
     public ResponseResult<Drug> getDrugById(@PathVariable Integer id) {

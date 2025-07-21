@@ -13,5 +13,6 @@ mybatis-plus:
   type-aliases-package: com.hwadee.backend.entity
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
 
 # swagger3配置（后期可加）

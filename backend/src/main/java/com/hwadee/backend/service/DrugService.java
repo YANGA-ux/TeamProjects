@@ -9,4 +9,6 @@ public interface DrugService {
     List<Drug> getDrugsByCategory(String category);
     List<Drug> searchDrugs(String keyword);
     List<Drug> getHotDrugs();
-} 
+
+    List<Drug> list();
+}

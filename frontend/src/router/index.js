@@ -13,8 +13,9 @@ import CompoundList from '../views/rd/CompoundList.vue'
 // import LiteratureList from '../views/rd/LiteratureList.vue'
 
 // 生产管理模块
-// import BatchList from '../views/prod/BatchList.vue'
-// import QualityStandardList from '../views/prod/QualityStandardList.vue'
+import ProductionHome from '../views/prod/ProductionHome.vue'
+import BatchList from '../views/prod/BatchList.vue'
+import QualityStandardList from '../views/prod/QualityStandardList.vue'
 
 // 供应链管理模块
 // import MaterialList from '../views/scm/MaterialList.vue'
@@ -40,8 +41,9 @@ const routes = [
     // { path: '/rd/literature', component: LiteratureList },
     
     // 生产管理模块路由
-    // { path: '/prod/batches', component: BatchList },
-    // { path: '/prod/standards', component: QualityStandardList },
+    { path: '/prod', component: ProductionHome },
+    { path: '/prod/batches', component: BatchList },
+    { path: '/prod/standards', component: QualityStandardList },
     
     // 供应链管理模块路由
     // { path: '/scm/materials', component: MaterialList },
