@@ -1,0 +1,27 @@
+# 需要创建的图片文件
+
+## 轮播图 (1200x300px)
+- banner1.jpg - 专业医药服务
+- banner2.jpg - 品质保证  
+- banner3.jpg - 快速配送
+
+## 药品图片 (300x200px)
+- drug1.jpg - 阿莫西林胶囊
+- drug2.jpg - 布洛芬片
+- drug3.jpg - 感冒灵颗粒
+- drug4.jpg - 维生素C片
+
+## 新闻图片 (200x150px)
+- news1.jpg - 疫苗研发
+- news2.jpg - 药监局政策
+- news3.jpg - 中医药
+
+## 默认图片 (300x200px)
+- default-drug.jpg - 默认药品图片
+- default-news.jpg - 默认新闻图片
+
+## 临时解决方案
+如果暂时没有图片，可以：
+1. 使用在线占位符服务
+2. 创建纯色背景图片
+3. 使用文字占位符 
