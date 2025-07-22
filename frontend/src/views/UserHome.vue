@@ -58,6 +58,7 @@
               <div class="module-icon prod">
                 <el-icon :size="40"><Box /></el-icon>
               </div>
+              <h4>生产管理</h4>
               <p>批次管理、质量控制、生产监控</p>
               <div class="module-stats">
                 <span>批次：{{ stats.batches || 0 }}</span>
@@ -282,11 +283,11 @@ const hasPermission = (module) => {
     console.log('管理员权限，允许访问') // 添加调试日志
     return true
   }
-
+  // 权限控制
   const permissions = {
     'rd': ['researcher', 'admin', '普通用户', 'user'],
-    'prod': ['producer', 'admin', 'user'], // 加上 'user'
-    'scm': ['supplier', 'admin'],
+    'prod': ['producer', 'admin', 'user'],
+    'scm': ['supplier', 'admin','user'],
     'sys': ['admin']
 }
 
@@ -301,9 +302,9 @@ const goToModule = (module) => {
   console.log('当前用户角色:', userInfo.value.role) // 添加调试日志
   
   const moduleRoutes = {
-    'rd': '/rd/compounds', // 研发管理跳转到化合物管理
+    'rd': 'rd', // 研发管理跳转到化合物管理
     'prod': '/prod', // 生产管理跳转到生产管理主页
-    // 'scm': '/scm/materials', // 供应链管理跳转到物料管理
+    'scm': '/scm', // 供应链管理跳转到物料管理
     // 'sys': '/sys/users' // 系统管理跳转到用户管理
   }
   

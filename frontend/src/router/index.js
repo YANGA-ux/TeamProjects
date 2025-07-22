@@ -9,15 +9,21 @@ import SimpleTest from '../views/SimpleTest.vue'
 
 // 研发管理模块
 import CompoundList from '../views/rd/CompoundList.vue'
-// import ExperimentList from '../views/rd/ExperimentList.vue'
-// import LiteratureList from '../views/rd/LiteratureList.vue'
+import ExperimentList from '../views/rd/ExperimentList.vue'
+import LiteratureList from '../views/rd/LiteratureList.vue'
 
 // 生产管理模块
 import ProductionHome from '../views/prod/ProductionHome.vue'
 import BatchList from '../views/prod/BatchList.vue'
 import QualityStandardList from '../views/prod/QualityStandardList.vue'
+import ScmHome from "../views/scm/ScmHome.vue";
 
 // 供应链管理模块
+import MaterialList from "../views/scm/MaterialList.vue";
+import SupplierList from "../views/scm/SupplierList.vue";
+import RdHome from "../views/rd/RdHome.vue";
+
+
 // import MaterialList from '../views/scm/MaterialList.vue'
 // import SupplierList from '../views/scm/SupplierList.vue'
 
@@ -36,9 +42,10 @@ const routes = [
     { path: '/simple', component: SimpleTest },
     
     // 研发管理模块路由
-    { path: '/rd/compounds', component: CompoundList },
-    // { path: '/rd/experiments', component: ExperimentList },
-    // { path: '/rd/literature', component: LiteratureList },
+    { path: '/rd', component: RdHome },
+    { path: '/rd/compounds',component: CompoundList},
+    { path: '/rd/experiments', component: ExperimentList },
+    { path: '/rd/literature', component: LiteratureList },
     
     // 生产管理模块路由
     { path: '/prod', component: ProductionHome },
@@ -46,8 +53,9 @@ const routes = [
     { path: '/prod/standards', component: QualityStandardList },
     
     // 供应链管理模块路由
-    // { path: '/scm/materials', component: MaterialList },
-    // { path: '/scm/suppliers', component: SupplierList },
+    { path: '/scm', component: ScmHome },
+    { path: '/scm/materials', component: MaterialList },
+    { path: '/scm/suppliers', component: SupplierList },
     
     // 系统管理模块路由
     // { path: '/sys/users', component: UserList },

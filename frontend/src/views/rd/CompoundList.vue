@@ -122,6 +122,9 @@
             <el-form-item label="分子量" prop="molecularWeight">
               <el-input-number v-model="form.molecularWeight" :precision="4" :step="0.1" />
             </el-form-item>
+            <el-form-item label="stats">
+              <el-input v-model="form.status"/>
+            </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
@@ -205,18 +208,18 @@ const rules = {
 // 计算属性
 const filteredCompounds = computed(() => {
   let result = compounds.value
-  
+
   if (searchKeyword.value) {
-    result = result.filter(item => 
+    result = result.filter(item =>
       item.compoundName.includes(searchKeyword.value) ||
       item.compoundCode.includes(searchKeyword.value)
     )
   }
-  
+
   if (searchCategory.value) {
     result = result.filter(item => item.category === searchCategory.value)
   }
-  
+
   return result
 })
 
@@ -282,7 +285,7 @@ const showEditDialog = (row) => {
 const handleSubmit = async () => {
   try {
     await formRef.value.validate()
-    
+
     if (isEdit.value) {
       // 编辑
       const res = await axios.put(`http://localhost:8080/api/compounds/${form.id}`, form)
@@ -314,7 +317,7 @@ const handleDelete = async (row) => {
       cancelButtonText: '取消',
       type: 'warning'
     })
-    
+
     const res = await axios.delete(`http://localhost:8080/api/compounds/${row.id}`)
     if (res.data.code === 200) {
       ElMessage.success('删除成功')

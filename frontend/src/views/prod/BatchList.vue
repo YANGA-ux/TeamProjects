@@ -63,8 +63,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="批次状态" prop="batchStatus">
-              <el-input v-model="form.batchStatus" />
+            <el-form-item label="批次状态" >
+              <el-input v-model="form.status" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -147,6 +147,117 @@
         <el-button type="primary" @click="handleSubmit">确定</el-button>
       </template>
     </el-dialog>
+
+    <!-- 新增/编辑对话框 -->
+    <el-dialog v-model="showAddDialog" :title="dialogTitle" width="600px" @close="resetForm">
+      <el-form :model="form" ref="formRef" label-width="120px">
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="批次编号" prop="batchCode">
+              <el-input v-model="form.batchCode" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="产品编号" prop="productCode">
+              <el-input v-model="form.productCode" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="产品名称" prop="productName">
+              <el-input v-model="form.productName" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="批次状态" >
+              <el-input v-model="form.status" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="计划数量" prop="plannedQuantity">
+              <el-input v-model="form.plannedQuantity" type="number" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="实际数量" prop="actualQuantity">
+              <el-input v-model="form.actualQuantity" type="number" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="单位" prop="unit">
+              <el-input v-model="form.unit" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="生产线" prop="productionLine">
+              <el-input v-model="form.productionLine" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="设备" prop="equipment">
+              <el-input v-model="form.equipment" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="工艺参数" prop="processParameters">
+              <el-input v-model="form.processParameters" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="质量参数" prop="qualityParameters">
+              <el-input v-model="form.qualityParameters" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="偏差记录" prop="deviationRecords">
+              <el-input v-model="form.deviationRecords" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-form-item label="附件" prop="attachments">
+          <el-input v-model="form.attachments" />
+        </el-form-item>
+        <el-form-item label="备注" prop="notes">
+          <el-input v-model="form.notes" />
+        </el-form-item>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="状态" prop="status">
+              <el-input v-model="form.status" type="number" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="药品ID" prop="drugId">
+              <el-input v-model="form.drugId" type="number" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="批号" prop="batchNumber">
+              <el-input v-model="form.batchNumber" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <template #footer>
+        <el-button @click="dialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="handleSubmit">确定</el-button>
+      </template>
+    </el-dialog>
+
+
+
+
   </div>
 </template>
 
