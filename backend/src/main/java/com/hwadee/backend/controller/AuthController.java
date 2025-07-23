@@ -8,8 +8,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.GrantedAuthority;
 
+import java.util.HashMap;
+import java.util.Map;
 
 
 @RestController
@@ -23,15 +27,35 @@ public class AuthController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<Map<String, Object>> login(@RequestBody LoginRequest loginRequest) {
         UsernamePasswordAuthenticationToken token =
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword());
+
         try {
             Authentication authentication = authenticationManager.authenticate(token);
-            // 登录成功，可以生成 JWT 或返回用户信息
-            return ResponseEntity.ok("登录成功");
+
+            // 获取用户详细信息（包含角色）
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+
+            // 构造响应数据
+            Map<String, Object> response = new HashMap<>();
+            response.put("code", 200);
+            response.put("message", "登录成功");
+            response.put("username", loginRequest.getUsername());
+
+            // 获取用户角色（Spring Security默认会将权限放在GrantedAuthority中）
+            String role = userDetails.getAuthorities().stream()
+                    .findFirst()
+                    .map(GrantedAuthority::getAuthority)
+                    .orElse("DEFAULT_ROLE");
+
+            response.put("role", role);
+
+            return ResponseEntity.ok(response);
         } catch (AuthenticationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("用户名或密码错误");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+                    Map.of("code", 401, "message", "用户名或密码错误")
+            );
         }
     }
     // 修改密码接口

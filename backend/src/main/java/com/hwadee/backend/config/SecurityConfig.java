@@ -20,7 +20,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // 允许所有OPTIONS请求
                         .requestMatchers("/api/login", "/api/register", "/api/change-password", "/error").permitAll()
                         .requestMatchers("/api/drugs/**", "/api/news/**", "/api/orders/**", "/api/test/**").permitAll() // 允许药品、新闻、订单、测试相关API
-                        .requestMatchers("/api/user/**", "/api/stats/**", "/api/compounds/**", "/api/prod/**", "/api/qa/**").permitAll() // 允许用户、统计、化合物、生产和质量相关API
+                        .requestMatchers("/api/user/**", "/api/stats/**",  "/api/prod/**", "/api/qa/**",
+                                "/api/rd/**","/api/scm/**").permitAll() // 允许用户、统计、化合物、生产和质量相关API
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form.disable())
@@ -37,4 +38,5 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return org.springframework.security.crypto.password.NoOpPasswordEncoder.getInstance();
     }
+
 }
