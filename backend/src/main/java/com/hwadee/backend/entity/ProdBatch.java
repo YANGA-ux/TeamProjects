@@ -84,13 +84,6 @@ public class ProdBatch {
     @TableField("update_by")
     private String updateBy;
 
-    @TableField("batch_number")
-    private String batchNumber;
-
-    @TableField("drug_id")
-    private Integer drugId;
-
-
     public Long getId() {
         return id;
     }
@@ -281,21 +274,5 @@ public class ProdBatch {
 
     public void setUpdateBy(String updateBy) {
         this.updateBy = updateBy;
-    }
-
-    public String getBatchNumber() {
-        return batchNumber;
-    }
-
-    public void setBatchNumber(String batchNumber) {
-        this.batchNumber = batchNumber;
-    }
-
-    public Integer getDrugId() {
-        return drugId;
-    }
-
-    public void setDrugId(Integer drugId) {
-        this.drugId = drugId;
     }
 }
