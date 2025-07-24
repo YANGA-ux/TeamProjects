@@ -11,6 +11,12 @@
         <el-form-item label="密码">
           <el-input v-model="loginForm.password" type="password" autocomplete="off" />
         </el-form-item>
+        <el-form-item label="验证码">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <el-input v-model="loginForm.captcha" style="flex: 1;" />
+            <img :src="captchaImage" @click="refreshCaptcha" style="height: 40px; cursor: pointer;" alt="验证码" />
+          </div>
+        </el-form-item>
         <el-form-item label="用户类型">
           <el-select v-model="loginForm.userType" placeholder="请选择用户类型">
             <el-option label="研究员" value="RESEARCHER"></el-option>
@@ -25,7 +31,7 @@
         </el-form-item>
 
         <el-form-item>
-          <el-checkbox v-model="rememberPassword" >记住密码</el-checkbox>
+          <el-checkbox v-model="rememberPassword">记住密码</el-checkbox>
         </el-form-item>
 
       </el-form>
@@ -39,39 +45,92 @@
     </div>
   </div>
 </template>
+
 <script setup>
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
-import {ElMessage} from "element-plus";
+import { ElMessage } from "element-plus";
+import { onUnmounted } from 'vue'
+
 const router = useRouter()
 const loginForm = ref({
   username: '',
   password: '',
-  userType: 'RESEARCHER' // 前端选择的用户类型
+  captcha: '',
+  userType: 'RESEARCHER'
 })
 const errorMsg = ref('')
+const captchaImage = ref('')
+const captchaKey = ref('')
+const rememberPassword = ref(false)
 
-const rememberPassword = ref(false);
-onMounted(() => {
-  const savedPassword = localStorage.getItem('rememberedPassword');
-  if (savedPassword) {
-    loginForm.value.password = savedPassword;
-    rememberPassword.value = true;
+// 获取验证码
+const refreshCaptcha = async () => {
+  try {
+    const response = await axios.get('http://localhost:8080/api/captcha', {
+      responseType: 'blob'
+    });
+
+    // 从响应头获取验证码key
+    const key = response.headers['captcha-key'] ||
+        response.headers['Captcha-Key'];
+
+    if (key) {
+      captchaKey.value = key;
+    } else {
+      throw new Error('未能获取验证码Key');
+    }
+
+    // 释放旧图片URL
+    if (captchaImage.value) URL.revokeObjectURL(captchaImage.value);
+
+    // 生成新图片URL
+    captchaImage.value = URL.createObjectURL(response.data);
+  } catch (error) {
+    console.error('验证码加载失败:', error);
+    ElMessage.error(`验证码加载失败: ${error.message}`);
   }
-});
+};
+// 在组件卸载时释放资源
+onUnmounted(() => {
+  if (captchaImage.value) {
+    URL.revokeObjectURL(captchaImage.value)
+  }
+})
+onMounted(() => {
+  const savedPassword = localStorage.getItem('rememberedPassword')
+  if (savedPassword) {
+    loginForm.value.password = savedPassword
+    rememberPassword.value = true
+  }
+  // 初始化时获取验证码
+  refreshCaptcha()
+})
+
 const handleLogin = async () => {
+  if (!loginForm.value.captcha) {
+    errorMsg.value = '请输入验证码'
+    return
+  }
+
   try {
     const res = await axios.post('http://localhost:8080/api/login', {
       username: loginForm.value.username,
-      password: loginForm.value.password
+      password: loginForm.value.password,
+      captcha: loginForm.value.captcha,
+      captchaKey: captchaKey.value,
+      userType: loginForm.value.userType
+    }, {
+      headers: {
+        'Captcha-Key': captchaKey.value // 同时在header中传递
+      }
     })
-    // 获取服务器返回的角色类型（数据库中的role字段）
-    const serverRole = res.data.role;
-    // 验证前端选择的用户类型是否与服务器返回的角色匹配
+    // 获取服务器返回的角色类型
+    const serverRole = res.data.role
     if (!isRoleMatch(loginForm.value.userType, serverRole)) {
-      errorMsg.value = '用户类型不匹配，请选择正确的用户类型';
-      return;
+      errorMsg.value = '用户类型不匹配，请选择正确的用户类型'
+      return
     }
     ElMessage.success('登录成功')
     errorMsg.value = ''
@@ -79,70 +138,46 @@ const handleLogin = async () => {
       username: loginForm.value.username,
       real_name: res.data.real_name || loginForm.value.username,
       role: serverRole,
-      // 如果需要，可以保留userType字段
       userType: loginForm.value.userType
     }
     localStorage.setItem('currentUser', JSON.stringify(userInfo))
-    localStorage.setItem('username', loginForm.value.username); // 明确存储用户名
-    if (rememberPassword.value) {
-      localStorage.setItem('rememberedPassword', loginForm.value.password);
-    } else {
-      localStorage.removeItem('rememberedPassword');
-    }
-    // 根据角色类型跳转到不同页面
-    switch(serverRole) {
-      case 'RESEARCHER':
-        await router.push('/user');
-        break;
-      case 'ADMIN':
-        await router.push('/user');
-        break;
-      case 'LAB_TECHNICIAN':
-        await router.push('/user');
-        break;
-      case 'APPROVER':
-         router.push('/rd');
-        break;
-      case 'SUPERVISOR':
-        await router.push('/user');
-        break;
-      default:
-        await router.push('/user');
-    }
-  } catch (err) {
-    errorMsg.value = '用户名或密码错误'
-  }
-}
-// 验证前端选择的userType是否与服务器返回的role匹配
-const isRoleMatch = (selectedUserType, serverRole) => {
-  // 这里可以根据实际业务逻辑调整匹配规则
-  // 简单情况下可以直接比较（如果前后端枚举值一致）
-  return selectedUserType === serverRole;
+    localStorage.setItem('username', loginForm.value.username)
 
-  // 或者更复杂的匹配逻辑，例如：
-  // const roleMapping = {
-  //   'RESEARCHER': ['RESEARCHER', 'SENIOR_RESEARCHER'],
-  //   'ADMIN': ['ADMIN', 'SUPER_ADMIN'],
-  //   // 其他映射关系
-  // };
-  // return roleMapping[selectedUserType]?.includes(serverRole);
-}
-const mapUserTypeToRole = (userType) => {
-  switch(userType) {
-    case 'LAB_TECHNICIAN':
-    case 'ADMIN':
-      return 'ADMIN';
-    default:
-      return 'RESEARCHER';
+    if (rememberPassword.value) {
+      localStorage.setItem('rememberedPassword', loginForm.value.password)
+    } else {
+      localStorage.removeItem('rememberedPassword')
+    }
+
+    // 根据角色跳转
+    switch(serverRole) {
+      case 'APPROVER':
+        router.push('/rd')
+        break
+      default:
+        await router.push('/user')
+    }
+
+    // 登录成功后刷新验证码
+    refreshCaptcha()
+  } catch (err) {
+    errorMsg.value = err.response?.data?.message || '登录失败'
+    // 登录失败后刷新验证码
+    refreshCaptcha()
   }
 }
+
+const isRoleMatch = (selectedUserType, serverRole) => {
+  return selectedUserType === serverRole
+}
+
 const goChangePassword = () => {
   router.push('/change-password')
 }
+
 const goRegister = () => {
   router.push('/register')
 }
-
 </script>
 <style scoped>
 /* 最外层容器：控制垂直+水平居中，同时排列标题和表单 */
