@@ -22,11 +22,10 @@ import QualityStandardList from '../views/prod/QualityStandardList.vue'
 import MaterialList from '../views/scm/MaterialList.vue'
 import SupplierList from '../views/scm/SupplierList.vue'
 import ScmHome from "../views/scm/ScmHome.vue";
-
+import Self from "../views/Self.vue";
 // 系统管理模块
 // import UserList from '../views/sys/UserList.vue'
 // import RoleList from '../views/sys/RoleList.vue'
-
 const routes = [
     { path: '/', redirect: '/login' },
     { path: '/login', component: Login },
@@ -36,7 +35,7 @@ const routes = [
     { path: '/admin', component: AdminHome },
     { path: '/test', component: TestPage },
     { path: '/simple', component: SimpleTest },
-    
+    { path: '/self', component: Self },
     // 研发管理模块路由
     {path: '/rd',component: RdHome},
     { path: '/rd/compounds', component: CompoundList },
@@ -57,10 +56,20 @@ const routes = [
     // { path: '/sys/users', component: UserList },
     // { path: '/sys/roles', component: RoleList }
 ]
-
 const router = createRouter({
     history: createWebHistory(),
     routes
 })
-
+router.beforeEach((to, from, next) => {
+    if (to.matched.some(record => record.meta.requiresAuth)) {
+        const username = localStorage.getItem('username');
+        if (!username) {
+            next('/login');
+        } else {
+            next();
+        }
+    } else {
+        next();
+    }
+});
 export default router

@@ -1,5 +1,5 @@
 package com.hwadee.backend.controller;
-
+import com.hwadee.backend.entity.User;
 import com.hwadee.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,11 +11,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.GrantedAuthority;
-
 import java.util.HashMap;
 import java.util.Map;
-
-
 @RestController
 @RequestMapping("/api")
 public class AuthController {
@@ -24,7 +21,6 @@ public class AuthController {
     private AuthenticationManager authenticationManager;
     @Autowired
     private UserService userService; // 需要有 UserService
-
 
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> login(@RequestBody LoginRequest loginRequest) {

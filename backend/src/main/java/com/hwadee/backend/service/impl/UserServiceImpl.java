@@ -82,7 +82,7 @@ public class UserServiceImpl implements UserService {
         user.setUsername(username);
         user.setPassword(password);
         user.setReal_name(realName);
-        user.setRole("user"); // 默认普通用户
+        user.setRole("RESEARCHER"); // 默认普通用户
         user.setStatus("1");  // 默认启用
         userMapper.insert(user);
         return true;
@@ -93,7 +93,6 @@ public class UserServiceImpl implements UserService {
         // 这里建议在UserMapper中自定义selectByRole方法
         return userMapper.selectByRole(role);
     }
-
 
 }
 

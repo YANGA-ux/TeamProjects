@@ -39,12 +39,11 @@
     </div>
   </div>
 </template>
-
 <script setup>
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
-
+import {ElMessage} from "element-plus";
 const router = useRouter()
 const loginForm = ref({
   username: '',
@@ -61,24 +60,20 @@ onMounted(() => {
     rememberPassword.value = true;
   }
 });
-
 const handleLogin = async () => {
   try {
     const res = await axios.post('http://localhost:8080/api/login', {
       username: loginForm.value.username,
       password: loginForm.value.password
     })
-
     // 获取服务器返回的角色类型（数据库中的role字段）
     const serverRole = res.data.role;
-
     // 验证前端选择的用户类型是否与服务器返回的角色匹配
     if (!isRoleMatch(loginForm.value.userType, serverRole)) {
       errorMsg.value = '用户类型不匹配，请选择正确的用户类型';
       return;
     }
-
-    alert('登录成功')
+    ElMessage.success('登录成功')
     errorMsg.value = ''
     const userInfo = {
       username: loginForm.value.username,
@@ -88,13 +83,12 @@ const handleLogin = async () => {
       userType: loginForm.value.userType
     }
     localStorage.setItem('currentUser', JSON.stringify(userInfo))
-
+    localStorage.setItem('username', loginForm.value.username); // 明确存储用户名
     if (rememberPassword.value) {
       localStorage.setItem('rememberedPassword', loginForm.value.password);
     } else {
       localStorage.removeItem('rememberedPassword');
     }
-
     // 根据角色类型跳转到不同页面
     switch(serverRole) {
       case 'RESEARCHER':
@@ -119,7 +113,6 @@ const handleLogin = async () => {
     errorMsg.value = '用户名或密码错误'
   }
 }
-
 // 验证前端选择的userType是否与服务器返回的role匹配
 const isRoleMatch = (selectedUserType, serverRole) => {
   // 这里可以根据实际业务逻辑调整匹配规则
@@ -134,7 +127,6 @@ const isRoleMatch = (selectedUserType, serverRole) => {
   // };
   // return roleMapping[selectedUserType]?.includes(serverRole);
 }
-
 const mapUserTypeToRole = (userType) => {
   switch(userType) {
     case 'LAB_TECHNICIAN':
@@ -144,15 +136,14 @@ const mapUserTypeToRole = (userType) => {
       return 'RESEARCHER';
   }
 }
-
 const goChangePassword = () => {
   router.push('/change-password')
 }
 const goRegister = () => {
   router.push('/register')
 }
-</script>
 
+</script>
 <style scoped>
 /* 最外层容器：控制垂直+水平居中，同时排列标题和表单 */
 .page-wrapper {
@@ -169,13 +160,11 @@ const goRegister = () => {
   /* 子元素垂直方向居中（可根据需求调整，若想让整体靠上/下，可换用 flex-start/flex-end ） */
   justify-content: center;
 }
-
 /* 标题样式：可按需调整间距 */
 .page-title {
   margin-bottom: 40px; /* 标题与表单之间的间距 */
   font-size: 24px;
 }
-
 /* 登录表单容器样式 */
 .login-container {
   width: 400px;
