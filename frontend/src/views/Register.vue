@@ -17,7 +17,6 @@
     <div v-if="msg" :style="{color: msgColor, textAlign: 'center'}">{{ msg }}</div>
   </div>
 </template>
-
 <script setup>
 import { ref } from 'vue'
 import axios from 'axios'
@@ -31,7 +30,6 @@ const form = ref({
 })
 const msg = ref('')
 const msgColor = ref('red')
-
 const handleRegister = async () => {
   try {
     await axios.post('http://localhost:8080/api/register', form.value)

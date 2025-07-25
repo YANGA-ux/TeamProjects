@@ -11,7 +11,14 @@
             <span class="user-dropdown">
               <el-avatar :size="32" icon="UserFilled" />
               <span style="margin-left: 8px">{{ userInfo.real_name || userInfo.username }}</span>
-              <span style="margin-left: 8px; color: #666;">({{ userInfo.role }})</span>
+              <span style="margin-left: 8px; color: #666;">({{
+                      userInfo.role === 'RESEARCHER' ? '研究员':
+                      userInfo.role === 'ADMIN' ? '管理员':
+                      userInfo.role === 'LAB_TECHNICIAN' ? '实验员':
+                      userInfo.role === 'APPROVER' ? '审批人员':
+                      userInfo.role === 'SUPERVISOR' ? '监管人员':
+                        userInfo.role
+                }})</span>
             </span>
             <template #dropdown>
               <el-dropdown-menu>
@@ -29,13 +36,25 @@
       <!-- 欢迎横幅 -->
       <el-card class="welcome-banner">
         <h2>欢迎使用生物医药企业管理系统</h2>
-        <p>当前用户：{{ userInfo.real_name || userInfo.username }} | 角色：{{ userInfo.role }}</p>
+        <p>当前用户：{{ userInfo.real_name || userInfo.username }} | 角色：{{
+                                                                            userInfo.role === 'RESEARCHER' ? '研究员':
+                                                                            userInfo.role === 'ADMIN' ? '管理员':
+                                                                            userInfo.role === 'LAB_TECHNICIAN' ? '实验员':
+                                                                            userInfo.role === 'APPROVER' ? '审批人员':
+                                                                            userInfo.role === 'SUPERVISOR' ? '监管人员':
+                                                                            userInfo.role}}</p>
       </el-card>
 
       <!-- 功能模块 -->
       <div class="modules-section">
         <h3>功能模块</h3>
-        <p>调试信息 - 当前用户角色: {{ userInfo.role }}</p>
+        <p>调试信息 - 当前用户角色: {{
+            userInfo.role === 'RESEARCHER' ? '研究员':
+            userInfo.role === 'ADMIN' ? '管理员':
+            userInfo.role === 'LAB_TECHNICIAN' ? '实验员':
+            userInfo.role === 'APPROVER' ? '审批人员':
+            userInfo.role === 'SUPERVISOR' ? '监管人员':
+            userInfo.role}}</p>
         <p>调试信息 - 研发管理权限: {{ hasPermission('rd') }}</p>
         <el-row :gutter="20">
           <!-- 研发模块 -->
@@ -286,8 +305,8 @@ const hasPermission = (module) => {
   const permissions = {
     'rd': ['researcher', 'admin', '普通用户', 'user'],
     'prod': ['producer', 'admin', 'user'], // 加上 'user'
-    'scm': ['supplier', 'admin'],
-    'sys': ['admin']
+    'scm': ['supplier', 'admin','user'],
+    'sys': ['admin','user']
 }
 
   const hasAccess = permissions[module]?.includes(normalizedRole) || false
@@ -301,10 +320,10 @@ const goToModule = (module) => {
   console.log('当前用户角色:', userInfo.value.role) // 添加调试日志
   
   const moduleRoutes = {
-    'rd': '/rd/compounds', // 研发管理跳转到化合物管理
+    'rd': '/rd', // 研发管理跳转到化合物管理
     'prod': '/prod', // 生产管理跳转到生产管理主页
-    // 'scm': '/scm/materials', // 供应链管理跳转到物料管理
-    // 'sys': '/sys/users' // 系统管理跳转到用户管理
+    'scm': '/scm', // 供应链管理跳转到物料管理
+    'sys': '/sys/Syshome' // 系统管理跳转到用户管理
   }
   
   const route = moduleRoutes[module]
@@ -357,7 +376,7 @@ const markAllRead = () => {
 
 // 显示个人信息
 const showProfile = () => {
-  ElMessage.info('个人信息功能开发中...')
+  router.push('/self')
 }
 
 // 退出登录

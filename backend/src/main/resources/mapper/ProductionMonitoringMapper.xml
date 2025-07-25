@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hwadee.backend.mapper.ProductionMonitoringMapper">
+
+    <!-- 连表查批次+质量标准 -->
+    <select id="selectBatchWithStandard" resultType="com.hwadee.backend.DTO.ProductionMonitoringDTO">
+        SELECT
+            b.id,
+            b.batch_code AS batchCode,
+            b.product_code AS productCode,
+            b.product_name AS productName,
+            b.batch_status AS batchStatus,
+            b.planned_quantity AS plannedQuantity,
+            b.actual_quantity AS actualQuantity,
+            b.production_line AS productionLine,
+            b.equipment,
+            s.standard_code AS standardCode,
+            s.standard_name AS standardName,
+            s.standard_status AS standardStatus,
+            s.effective_date AS effectiveDate,
+            s.expiry_date AS expiryDate,
+            s.description
+        FROM prod_batch b
+                 LEFT JOIN qa_quality_standard s
+                           ON b.product_code = s.product_code
+                               AND s.status = '1'
+        WHERE b.status = 1
+        ORDER BY b.id DESC
+    </select>
+
+    <!-- 根据产品编号查质量标准 -->
+    <select id="selectStandardByProductCode" resultType="com.hwadee.backend.DTO.ProductionMonitoringDTO">
+        SELECT
+            s.standard_code AS standardCode,
+            s.standard_name AS standardName,
+            s.standard_status AS standardStatus,
+            s.effective_date AS effectiveDate,
+            s.expiry_date AS expiryDate,
+            s.description
+        FROM qa_quality_standard s
+        WHERE s.product_code = #{productCode}
+          AND s.status = '1'
+        ORDER BY s.effective_date DESC
+            LIMIT 1
+    </select>
+
+    <!-- 质检结果更新 -->
+    <update id="updateBatchQcResult">
+        UPDATE prod_batch
+        SET batch_status =
+                CASE
+                    WHEN #{result} = 'PASSED' THEN 'COMPLETED'
+                    WHEN #{result} = 'REJECTED' THEN 'REJECTED'
+                    ELSE batch_status
+                    END
+        WHERE batch_code = #{batchCode}
+    </update>
+</mapper>

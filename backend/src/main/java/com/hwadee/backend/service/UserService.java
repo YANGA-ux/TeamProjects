@@ -23,4 +23,5 @@ public interface UserService {
     boolean register(String username, String password, String realName);//注册service
 
     List<User> getUsersByRole(String role);
+
 }

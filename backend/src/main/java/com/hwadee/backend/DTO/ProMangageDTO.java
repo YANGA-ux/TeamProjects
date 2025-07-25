@@ -1,17 +1,13 @@
-package com.hwadee.backend.entity;
+package com.hwadee.backend.DTO;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
-@TableName("scm_material")
-public class Material {
-    @TableId(type = IdType.AUTO)
+public class ProMangageDTO {
     private Long id;
     private String materialCode;
     private String materialName;
@@ -39,6 +35,23 @@ public class Material {
     private LocalDateTime updateTime;
     private String createBy;
     private String updateBy;
+
+
+    private String supplierName;
+    private String supplierType;
+    private String contactPerson;
+    private String contactPhone;
+    private String contactEmail;
+    private String address;
+    private String businessLicense;
+    private String taxNumber;
+    private String qualification;
+    private String supplierStatus;
+    private String riskLevel;
+    private String performanceRating;
+    private LocalDate qualificationExpiryDate;
+    private String auditHistory;
+
 
     public Long getId() {
         return id;
@@ -254,5 +267,117 @@ public class Material {
 
     public void setUpdateBy(String updateBy) {
         this.updateBy = updateBy;
+    }
+
+    public String getSupplierName() {
+        return supplierName;
+    }
+
+    public void setSupplierName(String supplierName) {
+        this.supplierName = supplierName;
+    }
+
+    public String getSupplierType() {
+        return supplierType;
+    }
+
+    public void setSupplierType(String supplierType) {
+        this.supplierType = supplierType;
+    }
+
+    public String getContactPerson() {
+        return contactPerson;
+    }
+
+    public void setContactPerson(String contactPerson) {
+        this.contactPerson = contactPerson;
+    }
+
+    public String getContactPhone() {
+        return contactPhone;
+    }
+
+    public void setContactPhone(String contactPhone) {
+        this.contactPhone = contactPhone;
+    }
+
+    public String getContactEmail() {
+        return contactEmail;
+    }
+
+    public void setContactEmail(String contactEmail) {
+        this.contactEmail = contactEmail;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getBusinessLicense() {
+        return businessLicense;
+    }
+
+    public void setBusinessLicense(String businessLicense) {
+        this.businessLicense = businessLicense;
+    }
+
+    public String getTaxNumber() {
+        return taxNumber;
+    }
+
+    public void setTaxNumber(String taxNumber) {
+        this.taxNumber = taxNumber;
+    }
+
+    public String getQualification() {
+        return qualification;
+    }
+
+    public void setQualification(String qualification) {
+        this.qualification = qualification;
+    }
+
+    public String getSupplierStatus() {
+        return supplierStatus;
+    }
+
+    public void setSupplierStatus(String supplierStatus) {
+        this.supplierStatus = supplierStatus;
+    }
+
+    public String getRiskLevel() {
+        return riskLevel;
+    }
+
+    public void setRiskLevel(String riskLevel) {
+        this.riskLevel = riskLevel;
+    }
+
+    public String getPerformanceRating() {
+        return performanceRating;
+    }
+
+    public void setPerformanceRating(String performanceRating) {
+        this.performanceRating = performanceRating;
+    }
+
+    public LocalDate getQualificationExpiryDate() {
+        return qualificationExpiryDate;
+    }
+
+    public void setQualificationExpiryDate(LocalDate qualificationExpiryDate) {
+        this.qualificationExpiryDate = qualificationExpiryDate;
+    }
+
+    public String getAuditHistory() {
+        return auditHistory;
+    }
+
+    public void setAuditHistory(String auditHistory) {
+        this.auditHistory = auditHistory;
     }
 }
