@@ -323,7 +323,7 @@ const goToModule = (module) => {
     'rd': '/rd', // 研发管理跳转到化合物管理
     'prod': '/prod', // 生产管理跳转到生产管理主页
     'scm': '/scm', // 供应链管理跳转到物料管理
-    // 'sys': '/sys/users' // 系统管理跳转到用户管理
+    'sys': '/sys/Syshome' // 系统管理跳转到用户管理
   }
   
   const route = moduleRoutes[module]
